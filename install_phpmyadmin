@@ -1,0 +1,23 @@
+Step 1 — Installing phpMyAdmin
+
+  sudo apt update
+  sudo apt install phpmyadmin php-mbstring php-gettext
+
+Warning: When the prompt appears, “apache2” is highlighted, but not selected. If you do not hit SPACE to select Apache, the installer will not move the necessary files during installation. Hit SPACE, TAB, and then ENTER to select Apache.
+
+  sudo phpenmod mbstring
+  sudo systemctl restart apache2
+
+===================================================
+  
+Step 2 — Adjusting User Authentication and Privileges
+
+  sudo mysql
+  SELECT user,authentication_string,plugin,host FROM mysql.user;
+  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+  FLUSH PRIVILEGES;
+  SELECT user,authentication_string,plugin,host FROM mysql.user;
+  
+You can now access the web interface by visiting your server’s domain name or public IP address followed by /phpmyadmin:
+
+http://your_domain_or_IP/phpmyadmin
