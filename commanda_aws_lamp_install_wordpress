@@ -1,0 +1,83 @@
+Step 1: Ensure that PHP and Apache are working on your server
+
+  sudo service apache2 status
+  sudo apt update && sudo apt upgrade
+  php -v
+
+
+==============================================================
+
+Step 2: Locate the PHP configuration file
+
+Determining the right PHP configuration file can be very confusing especially because the ‘php.ini’ file can be located on a different folder depending on the PHP version.
+
+The correct php.ini file should be in the Apache directory (e.g. ‘/etc/php/7.1/apache2/php.ini’). This will depend on the version of PHP. For instance, in Php7.2, the configuration file is located on ‘/etc/php/7.2/apache2/php.ini’
+
+==============================================================
+
+Step 3: Edit the Php Configuration file
+
+  sudo nano /etc/php/7.1/apache2/php.ini
+
+
+Standard ‘php.ini’ settings file - Change the INI settings according to the below values:
+
+  memory_limit  = 128M           
+  upload_max_filesize   = 50M                       
+  post_max_size = 50M    
+  max_execution_time = 120
+
+  sudo service apache2 restart
+  
+Step 4: Verify the php.ini settings
+  
+  Refreshing the info.php page should now show your updated settings. Remember to remove the info.php when you are done changing your PHP configuration.
+  
+=========================================================================
+
+Important Notes - Common Issues during/after Wordpress Install
+
+MOST IMPORTANT
+PERMISSION - YOU SHOULD OWN THE FILE BEFORE YOU CAN EDIT - YOU SHOULD KNOW THE USERNAME OF THE OPERATING SYSTEM.
+
+=====================
+Issues: Website pages not visible, not able to edit the files/folder , permsission denied issue, .htaccess not able to rewrite from permalinks.
+
+Execute the Comands below to set proper file permissions on Wordpress Directories and files.
+
+sudo chown -R ubuntu:root /var/www/html
+sudo find html -type d -exec chmod 775 {} \;
+sudo find html -type f -exec chmod 664 {} \;
+
+======================================================
+
+Enabling mod_rewrite on apache2
+
+By default, Apache does not allow the use of ‘.htaccess’ file so you will need to edit the configuration of each website’s virtual host file by adding the following code:
+
+  sudo nano /etc/apache2/apache2.conf
+
+Change the setting as below : AllowOverride All
+
+  <Directory /var/www/html>
+          Options Indexes FollowSymLinks MultiViews
+          AllowOverride All
+          Require all granted
+  </Directory>
+
+------------
+
+sudo a2enmod rewrite
+sudo service apache2 restart
+
+=================
+
+TO VERIFY ANY CONFIG ERRORS OR MISTAKE OR SYSNTAX ERRORS IN APACHE CONFIG FILE, RUN THE BELOW COMMAND - Its should show Syntax OK , if it not then there is some error in config due to which apache will not start.
+
+sudo service apache2 status  (Press Q to exit)
+
+# apachectl configtest
+Syntax OK
+
+# apachectl -t
+Syntax OK
