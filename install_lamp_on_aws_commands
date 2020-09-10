@@ -3,6 +3,7 @@ INSTALL LAMP STACK ON AWS - UBUNTU 18
 Step 1 — Installing Apache and Updating the Firewall
 
 	sudo apt update
+	sudo apt upgrade
 	sudo apt install apache2
 
 	sudo ufw app list
