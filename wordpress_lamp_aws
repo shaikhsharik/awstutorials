@@ -54,7 +54,13 @@ sudo find html -type f -exec chmod 664 {} \;
 Enabling mod_rewrite on apache2
 
 By default, Apache does not allow the use of ‘.htaccess’ file so you will need to edit the configuration of each website’s virtual host file by adding the following code:
-
+  
+  
+  OWN THE APACHE2 FOLDER FIRST IF YOU WANT TO EDIT VIA FILEZILLA OR FTP  - sudo chown -R ubuntu:root /etc/apache2/ - Revert back to root:root chown when done.
+  
+  
+  OR VIA SSH TERMINAL 
+  
   sudo nano /etc/apache2/apache2.conf
 
 Change the setting as below : AllowOverride All
