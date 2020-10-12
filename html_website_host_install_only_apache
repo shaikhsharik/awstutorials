@@ -28,3 +28,10 @@ User Permission : sudo chown -R ubuntu:root /var/www/html
 
 sudo find html -type d -exec chmod 775 {} \;
 sudo find html -type f -exec chmod 664 {} \;
+
+
+===============================
+
+FOR ZIP AND UNZIP MODULE - USEFUL
+
+sudo apt-get install zip unzip
