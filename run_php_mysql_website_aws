@@ -102,16 +102,6 @@ Warning: When the prompt appears, “apache2” is highlighted, but not selected
   sudo systemctl restart apache2
 
 ===================================================
-  
-Step 2 — Adjusting User Authentication and Privileges
-
-  sudo mysql
-  SELECT user,authentication_string,plugin,host FROM mysql.user;
-  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-  FLUSH PRIVILEGES;
-  SELECT user,authentication_string,plugin,host FROM mysql.user;
-  
-You can now access the web interface by visiting your server’s domain name or public IP address followed by /phpmyadmin:
 
 http://your_domain_or_IP/phpmyadmin
 
@@ -146,15 +136,15 @@ Step 4: Verify the php.ini settings
   
 =========================================================================
 
-Important Notes - Common Issues during/after Wordpress Install
+Important Notes - Common Issues during/after PHP Install
 
 MOST IMPORTANT
 PERMISSION - YOU SHOULD OWN THE FILE BEFORE YOU CAN EDIT - YOU SHOULD KNOW THE USERNAME OF THE OPERATING SYSTEM.
 
 =====================
-Issues: Website pages not visible, not able to edit the files/folder , permsission denied issue, .htaccess not able to rewrite from permalinks.
+Issues: Website pages not visible, not able to edit the files/folder , permsission denied issue, .htaccess not able to rewrite links.
 
-Execute the Comands below to set proper file permissions on Wordpress Directories and files.
+Execute the Comands below to set proper file permissions on  Directories and files.
 
 sudo chown -R ubuntu:root /var/www/html
 sudo find html -type d -exec chmod 775 {} \;
