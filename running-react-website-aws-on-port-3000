@@ -1,0 +1,74 @@
+Create Ec2 Instance
+
+Connect with SSH terminal
+
+Login as a root user - sudo su
+
+If you want to switch back to normal user use command  - sudo su ubuntu
+
+
+Get Ubuntu Updates
+=======================
+
+sudo apt-get update
+sudo apt-get upgrade
+
+
+=======================================================
+Install Node VIA NVM so that you can manage versions
+
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+source ~/.bashrc
+nvm ls-remote
+nvm install v14.15.0 (use the Latest LTS -  version number)
+nvm list (check  available node versions)
+nvm use v14.15.0 (to select the default or any other NVM version)
+node --version (verify node version and node install)
+
+
+
+=================================================
+
+Using Github, BitBucket or Gitlab - You an also directly upload the project VIA ftp
+
+sudo apt-get install -y git
+git --version (verify git version)
+
+I am using the Sample React Bolier plate from https://www.reactboilerplate.com/ website
+
+
+
+=========================
+
+
+Navigate to cd /var - You can create your own path for your website - I usually prefer var/www/website-name
+
+Create a directory mkdir www
+Create a directory inside www - and name it whatever you want i will name it -  mkdir sample-react
+
+
+git clone https://github.com/react-boilerplate/react-boilerplate.git
+=================================
+
+
+PLEASE NOTE : Open PORT 3000 in AWS security group inbound rules - CUSTOM TCP 3000
+
+=========================================
+
+INSTALLING PM2 - Process manager to keep alive the node server after closing the session also -https://pm2.keymetrics.io/docs/usage/quick-start/
+
+killall -9 node (this will kill all the node process)
+
+npm install pm2 -g (install it globally)
+
+pm2 start npm -- start   (this will run the node app even if you close the terminal)
+pm2 list (to check the running process)
+
+======================================================
+pm2 startup (For automatically running PM2 when the server stop/restarts)
+
+This will output a script in the terminal which you need to run, copy the script that it outputs and run it in the terminal window. Now, save all the currently running processes so that they can be run again whenever PM2 restarts either manually or by a script with the following command:
+
+pm2 save  (to save the config)
+
+======================================================
