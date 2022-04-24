@@ -1,10 +1,12 @@
 //@version=5
-indicator(title="RSI + Money Flow Index", shorttitle="RSI+MF", format=format.price, precision=2, timeframe="", timeframe_gaps=true)
+indicator(title="RSI + Money Flow Index + ADX", shorttitle="RSI+MF+ADX", format=format.price, precision=2, timeframe="", timeframe_gaps=true)
 
-// RSI
-
+// Indicator Switches
 rsi_switch = input.bool(true, title="RSI On/Off" ,group="Visibiity Controls")
 mf_switch = input.bool(true, title="Money Flow On/Off" ,group="Visibiity Controls")
+adx_switch = input.bool(true, title="ADX On/Off" , group="Visibiity Controls")
+
+// RSI
 ma(source, length, type) =>
     switch type
         "SMA" => ta.sma(source, length)
@@ -31,10 +33,10 @@ rsiUpperBand = hline(70, "RSI Upper Band", color=#787B86)
 hline(50, "RSI Middle Band", color=color.new(#787B86, 50))
 rsiLowerBand = hline(30, "RSI Lower Band", color=#787B86)
 fill(rsiUpperBand, rsiLowerBand, color=color.rgb(126, 87, 194, 90), title="RSI Background Fill")
-plot(rsi_switch ? rsi : na, "RSI", color=#7E57C2)
+plot(rsi_switch ? rsi : na, "RSI", color=#000000)
 plot(rsi_switch ? rsiMA : na, "RSI-based MA", color=color.yellow)
 
-// No Effect On Chart
+// No Effect On Chart You can Remove It
 bbUpperBand = plot(isBB ? rsiMA + ta.stdev(rsi, maLengthInput) * bbMultInput : na, title = "Upper Bollinger Band", color=color.green)
 bbLowerBand = plot(isBB ? rsiMA - ta.stdev(rsi, maLengthInput) * bbMultInput : na, title = "Lower Bollinger Band", color=color.green)
 fill(bbUpperBand, bbLowerBand, color= isBB ? color.new(color.green, 90) : na, title="Bollinger Bands Background Fill")
@@ -49,4 +51,41 @@ mf = ta.mfi(src, length)
 overbought=hline(80, title="Overbought", color=#787B86)
 oversold=hline(20, title="Oversold", color=#787B86)
 fill(overbought, oversold, color=color.rgb(126, 87, 194, 90), title="Background")
-plot(mf_switch ? mf : na, "MF", color=color.red)
+plot(mf_switch ? mf : na, "MF", color=color.purple)
+
+
+
+// ADX
+adxlen = input(14, title="ADX Smoothing" ,group="ADX Settings")
+dilen = input(14, title="DI Length", group="ADX Settings")
+dirmov(len) =>
+	adx_up = ta.change(high)
+	adx_down = -ta.change(low)
+	plusDM = na(adx_up) ? na : (adx_up > adx_down and adx_up > 0 ? adx_up : 0)
+	minusDM = na(down) ? na : (adx_down > adx_up and adx_down > 0 ? adx_down : 0)
+	truerange = ta.rma(ta.tr, len)
+	plus = fixnan(100 * ta.rma(plusDM, len) / truerange)
+	minus = fixnan(100 * ta.rma(minusDM, len) / truerange)
+	[plus, minus]
+adx(dilen, adxlen) =>
+	[plus, minus] = dirmov(dilen)
+	sum = plus + minus
+	adx = 100 * ta.rma(math.abs(plus - minus) / (sum == 0 ? 1 : sum), adxlen)
+sig = adx(dilen, adxlen)
+plot(adx_switch ? sig : na, color=color.red, title="ADX")
+
+
+// Bollinger Bands - Lets Complicate This
+
+bb_length = input.int(20, minval=1)
+bb_src = input(close, title="Source")
+mult = input.float(2.0, minval=0.001, maxval=50, title="StdDev")
+basis = ta.sma(bb_src, bb_length)
+dev = mult * ta.stdev(bb_src, bb_length)
+upper = basis + dev
+lower = basis - dev
+offset = input.int(0, "Offset", minval = -500, maxval = 500)
+plot(basis, "Basis", color=#FF6D00, offset = offset)
+p1 = plot(upper, "Upper", color=#2962FF, offset = offset)
+p2 = plot(lower, "Lower", color=#2962FF, offset = offset)
+fill(p1, p2, title = "Background", color=color.rgb(33, 150, 243, 95))
