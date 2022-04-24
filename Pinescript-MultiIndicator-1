@@ -1,0 +1,52 @@
+//@version=5
+indicator(title="RSI + Money Flow Index", shorttitle="RSI+MF", format=format.price, precision=2, timeframe="", timeframe_gaps=true)
+
+// RSI
+
+rsi_switch = input.bool(true, title="RSI On/Off" ,group="Visibiity Controls")
+mf_switch = input.bool(true, title="Money Flow On/Off" ,group="Visibiity Controls")
+ma(source, length, type) =>
+    switch type
+        "SMA" => ta.sma(source, length)
+        "Bollinger Bands" => ta.sma(source, length)
+        "EMA" => ta.ema(source, length)
+        "SMMA (RMA)" => ta.rma(source, length)
+        "WMA" => ta.wma(source, length)
+        "VWMA" => ta.vwma(source, length)
+
+rsiLengthInput = input.int(14, minval=1, title="RSI Length", group="RSI Settings")
+rsiSourceInput = input.source(close, "Source", group="RSI Settings")
+maTypeInput = input.string("SMA", title="MA Type", options=["SMA", "Bollinger Bands", "EMA", "SMMA (RMA)", "WMA", "VWMA"], group="MA Settings")
+maLengthInput = input.int(14, title="MA Length", group="MA Settings")
+bbMultInput = input.float(2.0, minval=0.001, maxval=50, title="BB StdDev", group="MA Settings")
+
+up = ta.rma(math.max(ta.change(rsiSourceInput), 0), rsiLengthInput)
+down = ta.rma(-math.min(ta.change(rsiSourceInput), 0), rsiLengthInput)
+rsi = down == 0 ? 100 : up == 0 ? 0 : 100 - (100 / (1 + up / down))
+rsiMA = ma(rsi, maLengthInput, maTypeInput)
+isBB = maTypeInput == "Bollinger Bands"
+
+
+rsiUpperBand = hline(70, "RSI Upper Band", color=#787B86)
+hline(50, "RSI Middle Band", color=color.new(#787B86, 50))
+rsiLowerBand = hline(30, "RSI Lower Band", color=#787B86)
+fill(rsiUpperBand, rsiLowerBand, color=color.rgb(126, 87, 194, 90), title="RSI Background Fill")
+plot(rsi_switch ? rsi : na, "RSI", color=#7E57C2)
+plot(rsi_switch ? rsiMA : na, "RSI-based MA", color=color.yellow)
+
+// No Effect On Chart
+bbUpperBand = plot(isBB ? rsiMA + ta.stdev(rsi, maLengthInput) * bbMultInput : na, title = "Upper Bollinger Band", color=color.green)
+bbLowerBand = plot(isBB ? rsiMA - ta.stdev(rsi, maLengthInput) * bbMultInput : na, title = "Lower Bollinger Band", color=color.green)
+fill(bbUpperBand, bbLowerBand, color= isBB ? color.new(color.green, 90) : na, title="Bollinger Bands Background Fill")
+
+
+
+// Money Flow Index
+
+length = input.int(title="Length", defval=14, minval=1, maxval=2000, group="Money Flow Index Settings")
+src = hlc3
+mf = ta.mfi(src, length)
+overbought=hline(80, title="Overbought", color=#787B86)
+oversold=hline(20, title="Oversold", color=#787B86)
+fill(overbought, oversold, color=color.rgb(126, 87, 194, 90), title="Background")
+plot(mf_switch ? mf : na, "MF", color=color.red)
