@@ -1,1 +1,5 @@
 
+https://www.inmotionhosting.com/support/security/install-clamav-on-ubuntu/
+
+https://docs.e2enetworks.com/security/bestpractice/clamav_scan.html
+
