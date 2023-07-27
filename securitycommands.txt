@@ -3,3 +3,5 @@ https://www.inmotionhosting.com/support/security/install-clamav-on-ubuntu/
 
 https://docs.e2enetworks.com/security/bestpractice/clamav_scan.html
 
+https://medium.com/@paulodef/4-free-tools-1-to-check-how-your-website-looks-like-from-different-countries-3e84bc34bd89
+
