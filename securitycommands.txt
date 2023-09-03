@@ -7,3 +7,5 @@ https://medium.com/@paulodef/4-free-tools-1-to-check-how-your-website-looks-like
 
 https://www.tecmint.com/install-lemp-with-phpmyadmin-in-ubuntu-20-04/
 
+https://muthu.co/technology/correct-file-permissions-for-wordpress/
+
